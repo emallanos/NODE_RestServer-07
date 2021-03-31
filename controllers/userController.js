@@ -1,42 +1,60 @@
 const { request, response } = require('express');
+const { encryptPassword } = require('../helpers/shared');
+const User = require('../models/user');
 
-const usuariosGet = (req = request, res = response) => {
-    const { nombre='No name', apellido, id, page=1, limit} = req.query;
-    
+const usuariosGet = async (req = request, res = response) => {
+    const { desde = 0, limite = 5 } = req.query;
+    const filter = { state:true };
+
+    const [total, users] = await Promise.all([
+        User.countDocuments(filter),
+        User.find(filter)
+        .skip(Number(desde))
+        .limit(Number(limite))
+    ]);
+
     res.status(200).json({
-        msg: "get API - controlador",
-        nombre,
-        apellido,
-        id,
-        page,
-        limit
+        total,
+        users
     });
 }
 
-const usuariosPost = (req, res) => {
-    const { nombre, apellido, edad } = req.body;
+const usuariosPost = async (req, res) => {
+    const { name, mail, password, role } = req.body;
+    const user = new User({name, mail, password, role});
     
-    res.json({
-        msg: "post API - controlador",
-        nombre,
-        apellido,
-        edad
-    });
+    user.password = encryptPassword(password);
+
+    //Guardar el usuario en BD
+    await user.save();    
+    
+    res.status(201).json(user);
 }
 
-const usuariosPut = (req, res) => {
+const usuariosPut = async (req, res = response) => {
+    const { id } = req.params;
+    const { _id, password, google, mail, ...resto } = req.body;
+
+    //TO DO validar contra base de datos
+    if( password ){
+        resto.password = encryptPassword(password);
+    }
+
+    const user = await User.findByIdAndUpdate( id, resto );
+
+    res.json(user);
+}
+
+const usuariosDelete = async (req, res) => {
     const { id } = req.params;
     
-    res.json({
-        msg: "put API - controlador",
-        id
-    });
-}
+    //Delete Físico de un Usuario
+    //const user = await User.findByIdAndDelete( id );
 
-const usuariosDelete = (req, res) => {
-    res.json({
-        msg: "delete API - controlador"
-    });
+    //Delete Lógico de un Usuario
+    const user = await User.findByIdAndUpdate( id, { state: false } );
+
+    res.json(user);
 }
 
 const usuariosPatch = (req, res) => {
