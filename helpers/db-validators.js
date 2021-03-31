@@ -25,4 +25,12 @@ const userExistsById = async( id ) => {
     }
 }
 
-module.exports = { itIsValidRole, emailExists, userExistsById };
+//Verificar si un usuario tiene baja lógica en base de datos
+const userDeleted = async( id ) => {
+    const userDelete = await User.findById(id);
+    if(userDelete != null && !userDelete.state){
+        throw new Error(`El usuario con id ${ id } fue borrado de BD`);
+    }
+}
+
+module.exports = { itIsValidRole, emailExists, userExistsById, userDeleted };
