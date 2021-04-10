@@ -26,7 +26,14 @@ const usuariosPost = async (req, res) => {
     user.password = encryptPassword(password);
 
     //Guardar el usuario en BD
-    await user.save();    
+    try {
+        await user.save();    
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: "Error interno en el servidor"
+        });
+    }
     
     res.status(201).json(user);
 }

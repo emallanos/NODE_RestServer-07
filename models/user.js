@@ -21,7 +21,7 @@ const UserSchema = Schema({
     role: {
         type: String,
         required: true,
-        enum: ['ADMIN_ROLE', 'USER_ROLE']
+        enum: ['ADMIN_ROLE', 'USER_ROLE', 'VENTAS_ROLE']
     },
     state: {
         type: Boolean,
@@ -33,10 +33,11 @@ const UserSchema = Schema({
     }
 });
 
-//Quitamos del usuario el --v y el password cuando lo devolvemos como json
+//Quitamos del usuario el __v y el password cuando lo devolvemos como json
 //en el response, al ser ingresado en la base de datos.
 UserSchema.methods.toJSON = function(){
-    const { __v, password, ...user} = this.toObject();
+    const { __v, password, _id, ...user} = this.toObject();
+    user.uid = _id;
     return user;
 }
 
