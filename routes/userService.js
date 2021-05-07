@@ -1,6 +1,12 @@
 const { Router } = require('express');
 const router = Router();
-const { usuariosGet, usuariosPost, usuariosPut, usuariosDelete, usuariosPatch } = require('../controllers/userController');
+
+const { usuariosGet, 
+        usuariosPost, 
+        usuariosPut, 
+        usuariosDelete, 
+        usuariosPatch } = require('../controllers/userController');
+
 const { check } = require('express-validator');
 
 const { 
@@ -9,7 +15,10 @@ const {
     isAdminRole, 
     containsRole } = require('../middlewares');
 
-const { itIsValidRole, emailExists, userExistsById, userDeleted } = require('../helpers/db-validators');
+const { itIsValidRole, 
+        emailExists, 
+        userExistsById, 
+        userDeleted } = require('../helpers/db-validators');
 
 router.get('/', [
     validateJWT

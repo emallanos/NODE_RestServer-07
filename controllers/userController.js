@@ -47,7 +47,7 @@ const usuariosPut = async (req, res = response) => {
         resto.password = encryptPassword(password);
     }
 
-    const user = await User.findByIdAndUpdate( id, resto );
+    const user = await User.findByIdAndUpdate( id, resto, { new:true } );
 
     res.json(user);
 }
@@ -59,7 +59,7 @@ const usuariosDelete = async (req, res) => {
     //const user = await User.findByIdAndDelete( id );
 
     //Delete Lógico de un Usuario
-    const user = await User.findByIdAndUpdate( id, { state: false } );
+    const user = await User.findByIdAndUpdate( id, { state: false }, { new:true } );
 
     res.json(user);
 }

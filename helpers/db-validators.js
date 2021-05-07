@@ -1,5 +1,4 @@
-const Role = require('../models/role');
-const User = require('../models/user');
+const { Category, Role, User, Product } = require('../models');
 
 //Verificar si el rol ingresado es válido
 const itIsValidRole = async(role = '') => {
@@ -17,7 +16,7 @@ const emailExists = async(mail = '') => {
     }
 }
 
-//Verificar si un id existe en base de datos
+//Verificar si un usuario existe en base de datos por id
 const userExistsById = async( id ) => {
     const userExists = await User.findById(id);
     if(!userExists){
@@ -33,4 +32,63 @@ const userDeleted = async( id ) => {
     }
 }
 
-module.exports = { itIsValidRole, emailExists, userExistsById, userDeleted };
+//Verificar si una categoria existe en base de datos por id
+const categoryExistsById = async( id ) => {
+    const categoryExists = await Category.findById(id);
+    if(!categoryExists){
+        throw new Error(`El id ${ id } no existe.`);
+    }
+}
+
+//Verificar si una categoria existe en base de datos por nombre
+const categoryExistsByName = async( name = '' ) => {
+    const categoryExists = await Category.findOne({ name: name.toUpperCase() });
+    if(categoryExists){
+        throw new Error(`La categoria con el nombre ${ name } ya existe.`);
+    }
+}
+
+//Verificar si una categoria tiene baja lógica en base de datos
+const categoryDeleted = async( id ) => {
+    const categoryDelete = await Category.findById(id);
+    if(categoryDelete != null && !categoryDelete.state){
+        throw new Error(`La categoria con id ${ id } fue borrada de BD`);
+    }
+}
+
+//Verificar si un producto existe en base de datos por id
+const productExistsById = async( id ) => {
+    const productExists = await Product.findById(id);
+    if(!productExists){
+        throw new Error(`El id ${ id } no existe.`);
+    }
+}
+
+//Verificar si un producto existe en base de datos por nombre
+const productExistsByName = async( name = '' ) => {
+    const productExists = await Product.findOne({ name: name.toUpperCase() });
+    if(productExists){
+        throw new Error(`El producto con el nombre ${ name } ya existe.`);
+    }
+}
+
+//Verificar si un producto tiene baja lógica en base de datos
+const productDeleted = async( id ) => {
+    const productDelete = await Product.findById(id);
+    if(productDelete != null && !productDelete.state){
+        throw new Error(`El producto con id ${ id } fue borrada de BD`);
+    }
+}
+
+module.exports = { 
+    itIsValidRole, 
+    emailExists, 
+    userExistsById, 
+    userDeleted, 
+    categoryExistsById,
+    categoryExistsByName,
+    categoryDeleted,
+    productExistsById,
+    productExistsByName,
+    productDeleted
+ };
