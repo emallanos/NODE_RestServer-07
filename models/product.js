@@ -26,8 +26,8 @@ const ProductSchema = Schema({
         required: true
     },
     description: {type: String},
-    available: {type: Boolean, default: true}
-
+    available: {type: Boolean, default: true},
+    image: {type: String}
 });
 
 //Quitamos del producto el __v y el state cuando lo devolvemos como json

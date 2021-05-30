@@ -80,6 +80,20 @@ const productDeleted = async( id ) => {
     }
 }
 
+/**
+ * Validate Allow Collections
+ */
+const allowCollections = async( collection = '', collections = [] ) =>{
+    const included = collections.includes( collection );
+
+    if( !included ){
+        throw new Error(`La colección ${ collection } no es válida. ${ collections }`);
+    }
+
+    return true;
+}
+
+
 module.exports = { 
     itIsValidRole, 
     emailExists, 
@@ -90,5 +104,6 @@ module.exports = {
     categoryDeleted,
     productExistsById,
     productExistsByName,
-    productDeleted
+    productDeleted,
+    allowCollections
  };
