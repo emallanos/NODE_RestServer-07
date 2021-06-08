@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid');
+const { uuid } = require('uuid');
 const path = require('path');
 
 const uploadFile = (files, validExtensions = ['jpeg', 'jpg', 'png', 'gif'], folder = '') => {
@@ -12,7 +12,7 @@ const uploadFile = (files, validExtensions = ['jpeg', 'jpg', 'png', 'gif'], fold
             return reject(`La extension ${ extension } no es valida - [ ${ validExtensions } ]`);
         }
     
-        const temporaryName = uuidv4() + '.' + extension;
+        const temporaryName = uuid.v4() + '.' + extension;
         const uploadPath = path.join( __dirname, '../uploads/', folder, temporaryName );
     
         archivo.mv(uploadPath, (err) => {
